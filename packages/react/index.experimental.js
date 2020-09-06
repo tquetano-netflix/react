@@ -26,10 +26,13 @@ export {
   useReducer,
   useRef,
   useState,
+  useMutableSource as unstable_useMutableSource,
+  createMutableSource as unstable_createMutableSource,
   Fragment,
   Profiler,
   StrictMode,
   Suspense,
+  unstable_LegacyHidden,
   createElement,
   cloneElement,
   isValidElement,
@@ -37,14 +40,13 @@ export {
   __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
   createFactory,
   // exposeConcurrentModeAPIs
-  useTransition,
-  useDeferredValue,
-  SuspenseList,
-  unstable_withSuspenseConfig,
+  useTransition as unstable_useTransition,
+  useDeferredValue as unstable_useDeferredValue,
+  startTransition as unstable_startTransition,
+  SuspenseList as unstable_SuspenseList,
   // enableBlocksAPI
-  block,
-  // enableJSXTransformAPI
-  jsx,
-  jsxs,
-  jsxDEV,
+  block as unstable_block,
+  unstable_useOpaqueIdentifier,
+  // enableDebugTracing
+  unstable_DebugTracingMode,
 } from './src/React';

@@ -10,10 +10,13 @@
 import ReactVersion from 'shared/ReactVersion';
 import {
   REACT_FRAGMENT_TYPE,
+  REACT_DEBUG_TRACING_MODE_TYPE,
   REACT_PROFILER_TYPE,
   REACT_STRICT_MODE_TYPE,
   REACT_SUSPENSE_TYPE,
   REACT_SUSPENSE_LIST_TYPE,
+  REACT_LEGACY_HIDDEN_TYPE,
+  REACT_SCOPE_TYPE,
 } from 'shared/ReactSymbols';
 
 import {Component, PureComponent} from './ReactBaseClasses';
@@ -24,13 +27,12 @@ import {
   createFactory as createFactoryProd,
   cloneElement as cloneElementProd,
   isValidElement,
-  jsx as jsxProd,
 } from './ReactElement';
 import {createContext} from './ReactContext';
 import {lazy} from './ReactLazy';
-import forwardRef from './forwardRef';
-import memo from './memo';
-import block from './block';
+import {forwardRef} from './ReactForwardRef';
+import {memo} from './ReactMemo';
+import {block} from './ReactBlock';
 import {
   useCallback,
   useContext,
@@ -39,37 +41,28 @@ import {
   useDebugValue,
   useLayoutEffect,
   useMemo,
+  useMutableSource,
   useReducer,
   useRef,
   useState,
-  useResponder,
   useTransition,
   useDeferredValue,
+  useOpaqueIdentifier,
 } from './ReactHooks';
-import {withSuspenseConfig} from './ReactBatchConfig';
 import {
   createElementWithValidation,
   createFactoryWithValidation,
   cloneElementWithValidation,
-  jsxWithValidation,
-  jsxWithValidationStatic,
-  jsxWithValidationDynamic,
 } from './ReactElementValidator';
+import {createMutableSource} from './ReactMutableSource';
 import ReactSharedInternals from './ReactSharedInternals';
-import createFundamental from 'shared/createFundamentalComponent';
-import createResponder from 'shared/createEventResponder';
-import createScope from 'shared/createScope';
+import {createFundamental} from './ReactFundamental';
+import {startTransition} from './ReactStartTransition';
 
 // TODO: Move this branching into the other module instead and just re-export.
 const createElement = __DEV__ ? createElementWithValidation : createElementProd;
 const cloneElement = __DEV__ ? cloneElementWithValidation : cloneElementProd;
 const createFactory = __DEV__ ? createFactoryWithValidation : createFactoryProd;
-
-const jsxDEV = __DEV__ ? jsxWithValidation : undefined;
-const jsx = __DEV__ ? jsxWithValidationDynamic : jsxProd;
-// we may want to special case jsxs internally to take advantage of static children.
-// for now we can ship identical prod functions
-const jsxs = __DEV__ ? jsxWithValidationStatic : jsxProd;
 
 const Children = {
   map,
@@ -81,6 +74,7 @@ const Children = {
 
 export {
   Children,
+  createMutableSource,
   createRef,
   Component,
   PureComponent,
@@ -95,12 +89,14 @@ export {
   useDebugValue,
   useLayoutEffect,
   useMemo,
+  useMutableSource,
   useReducer,
   useRef,
   useState,
   REACT_FRAGMENT_TYPE as Fragment,
   REACT_PROFILER_TYPE as Profiler,
   REACT_STRICT_MODE_TYPE as StrictMode,
+  REACT_DEBUG_TRACING_MODE_TYPE as unstable_DebugTracingMode,
   REACT_SUSPENSE_TYPE as Suspense,
   createElement,
   cloneElement,
@@ -111,21 +107,15 @@ export {
   createFactory,
   // Concurrent Mode
   useTransition,
+  startTransition,
   useDeferredValue,
   REACT_SUSPENSE_LIST_TYPE as SuspenseList,
-  withSuspenseConfig as unstable_withSuspenseConfig,
+  REACT_LEGACY_HIDDEN_TYPE as unstable_LegacyHidden,
   // enableBlocksAPI
   block,
-  // enableDeprecatedFlareAPI
-  useResponder as DEPRECATED_useResponder,
-  createResponder as DEPRECATED_createResponder,
   // enableFundamentalAPI
   createFundamental as unstable_createFundamental,
   // enableScopeAPI
-  createScope as unstable_createScope,
-  // enableJSXTransformAPI
-  jsx,
-  jsxs,
-  // TODO: jsxDEV should not be exposed as a name. We might want to move it to a different entry point.
-  jsxDEV,
+  REACT_SCOPE_TYPE as unstable_Scope,
+  useOpaqueIdentifier as unstable_useOpaqueIdentifier,
 };
